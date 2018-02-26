@@ -80,13 +80,8 @@ struct trackermonConfig readConfig(char* pfilename){
 
 /**
  * @brief Example of how to run it
- * @details [long description]
- * 
- * @param argc [description]
- * @param argv [description]
- * 
- * @return [description]
  */
+/**
 int main(int argc, char **argv)
 {
         struct trackermonConfig configstruct;
