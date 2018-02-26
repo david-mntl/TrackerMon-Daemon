@@ -1,11 +1,14 @@
 /**
- * readConfig.c
+ * readConfigFile.c
  * @details Simple program to read file into a config struct
  * 
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
  * @date 25-02-2018
  * 
- * compilation command: gcc -Wall readConfig.c -o reader
+ * reference: https://www.pacificsimplicity.ca/blog/simple-read-configuration-file-struct-example = link that helps to resolve the problem
+ * 
+ * compilation command: gcc -Wall readConfigFile.c -o reader
+ * Execution: ./reader
  */
 
 #include <stdio.h> 
@@ -81,7 +84,6 @@ struct trackermonConfig readConfig(char* pfilename){
 /**
  * @brief Example of how to run it
  */
-/**
 int main(int argc, char **argv)
 {
         struct trackermonConfig configstruct;
@@ -100,4 +102,3 @@ int main(int argc, char **argv)
                
         return 0;
 }
-*/
