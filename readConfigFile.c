@@ -7,7 +7,7 @@
  * 
  * reference: https://www.pacificsimplicity.ca/blog/simple-read-configuration-file-struct-example = link that helps to resolve the problem
  * 
- * compilation command: gcc -Wall readConfigFile.c -o reader
+ * compilation command: gcc readConfigFile.c -o reader
  * Execution: ./reader
  */
 

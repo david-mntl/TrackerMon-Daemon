@@ -36,7 +36,7 @@ double getCPUStat(){
 	const char d[2] = " ";
 	char* token;
 	int i = 0;
-	long int sum = 0, idle = 0;
+	double sum = 0, idle = 0;
 
 	FILE* fp = fopen(CPU_STAT_FILE_NAME,"r"); //open file
 
@@ -54,14 +54,15 @@ double getCPUStat(){
 		while(token!=NULL){
 			token = strtok(NULL,d);
 			if(token!=NULL){
-				sum += atoi(token); //sum all items of CPU
+				sum += atof(token); //sum all items of CPU
 
 				if(i==3){
-					idle = atoi(token); //get idle
+					idle = atof(token); //get idle
 				}
 				i++;
 			}
 		}
+		printf("%f\n", 100 - 100*(idle/sum));
 		return (1.0 - (idle)*1.0/(sum))*100;	
 	}
     
@@ -127,7 +128,7 @@ double memStat()
  
 int main(int argC,char* argV[])
 {
-	//getCPUStat();
-	memStat();
+	getCPUStat();
+	//memStat();
 	return 0;
 }
