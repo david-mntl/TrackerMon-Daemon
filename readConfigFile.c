@@ -27,36 +27,39 @@
  * @param pfilename name of the config file to read
  */
 void readConfigFile(int *pCPU, int * pMEM, int * pSYNN, char * plogFilePath){
-    FILE * fp;
-    char * line = NULL;
-    size_t len = 0;
-    ssize_t read;
+    FILE * fp;    
 
     fp = fopen(CONFIG_FILE_NAME, "r");
-    if (fp == NULL)
+    if (fp == NULL){
+        fclose(fp); 
         exit(EXIT_FAILURE);
+    }
+    else{
+        char key[256], value[256];
+        int iVal;
+        char * line = NULL;
+        size_t len = 0;
+        ssize_t read;
 
-    char key[256], value[256];
-    int iVal;
-
-    while ((read = getline(&line, &len, fp)) != -1) {
-        if(line[0] == '#' || line[0] == '\n')
-            continue;
-        else{
-            sscanf(line, "%s = %s", key, value);
-            if(strcmp(key, "LOGFILE") == 0){       //Identify the LOGFILE path
-                strncpy(plogFilePath,value, 255);
-            } else if(strcmp(key, "CPUthreshold") == 0){  //Read the CPUthreshold
-                sscanf(value, "%d", &(*pCPU));
-            } else if(strcmp(key, "MEMthreshold") == 0){  //Read the Memthreshold
-                sscanf(value, "%d", &(*pMEM));
-            } else if(strcmp(key, "SYNthreshold") == 0){  //Read the SYNthreshold
-                sscanf(value, "%d", &(*pSYNN));
+        while ((read = getline(&line, &len, fp)) != -1) {
+            if(line[0] == '#' || line[0] == '\n')
+                continue;
+            else{
+                sscanf(line, "%s = %s", key, value);
+                if(strcmp(key, "LOGFILE") == 0){       //Identify the LOGFILE path
+                    strncpy(plogFilePath,value, 255);
+                } else if(strcmp(key, "CPUthreshold") == 0){  //Read the CPUthreshold
+                    sscanf(value, "%d", &(*pCPU));
+                } else if(strcmp(key, "MEMthreshold") == 0){  //Read the Memthreshold
+                    sscanf(value, "%d", &(*pMEM));
+                } else if(strcmp(key, "SYNthreshold") == 0){  //Read the SYNthreshold
+                    sscanf(value, "%d", &(*pSYNN));
+                }
             }
         }
+        fclose(fp);    
     }
-
-    fclose(fp);
+    
 }
 
 /**

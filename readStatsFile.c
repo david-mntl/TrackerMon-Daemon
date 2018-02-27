@@ -8,7 +8,7 @@
  * 
  * reference: https://rosettacode.org/wiki/Linux_CPU_utilization = link that helps to resolve the problem
  * 
- * * compilation command: gcc -Wall readStatsFile.c -o statsReader
+ * * compilation command: gcc readStatsFile.c -o statsReader
  * 
  */
 #include<stdlib.h>
@@ -30,22 +30,21 @@
  *          The CPU usage = ( 1 - (4266549 / suma(296948, 1960, 101245, 4266549, 59385, 0, 848, 0, 0, 0)) )*100
  * @return The cpu usage
  */
-double getCPUStat(){
-	char str[100];
-	const char d[2] = " ";
-	char* token;
-	int i = 0;
-	double sum = 0, idle = 0;
+void cpuStat(double * pCPU){	
 
 	FILE* file = fopen(CPU_STAT_FILE_NAME,"r"); //open file
 
 	if(file == NULL){ //if the file can not be open
-		printf("can not open file");
-		return -1;
+		fclose(file); 
+        exit(EXIT_FAILURE);
 	}
 	//file open
 	else{
-		i = 0;
+		char str[100];
+		const char d[2] = " ";
+		char* token;
+		int i = 0;
+		double sum = 0, idle = 0;
 		fgets(str,100,file);
 		fclose(file);
 		token = strtok(str,d); //token by token
@@ -61,7 +60,7 @@ double getCPUStat(){
 				i++;
 			}
 		}
-		return (1.0 - (idle)*1.0/(sum))*100;	
+		*pCPU = (1.0 - (idle)*1.0/(sum))*100;	
 	}
     
 }
@@ -74,17 +73,20 @@ double getCPUStat(){
  *          The Memory usage = 100*(MemTotal - MemFree)/MemTotal
  * @return Return the memory usage
  */
-double memStat()
+void memStat(double * pMEM)
 {
-	FILE *file = fopen (MEM_STAT_FILE_NAME, "r");   //open the file, read stat
-	double memTotal, memFree;
-	const char d[2] = " ";
-	//if the file exists or open
-    if (file != NULL){    	
-
+	FILE *file = fopen (MEM_STAT_FILE_NAME, "r");   //open the file, read stat	
+	if(file == NULL){
+		fclose(file); 
+        exit(EXIT_FAILURE);
+	}
+    else{    	
+		//if the file exists or open
     	char line[MAXBUF]; //reading line for the config file
     	int i = 0, j = 0; //to know which parameter is readed
     	char* token;
+    	double memTotal, memFree;
+		const char d[2] = " ";	
     	// while there are lines to read
     	while( i < 2){
     	 	fgets(line, sizeof(line), file);
@@ -104,23 +106,32 @@ double memStat()
 
     	//closing the file
     	fclose(file);	
-    	return 100*(memTotal- memFree)/memTotal;;
-    }// IF END
+    	*pMEM = 100*(memTotal- memFree)/memTotal;;
+    }// ILSE END
+}
 
-    else{ //if the file couldnt be open
-    	//syslog(LOG_ERR, "Can not open config file: %s, error: %s",
-		//	conf_file_name, strerror(errno));
-		printf("Can not open file");
-    	fclose(file);	
-    	return -1;
-    }
-	
-	
+
+void readErrors(){
+	char *errorM = (char*) malloc(256);
+	//char const* const fileError = "/var/log/messages.log"; //should check that argc > 1
+    FILE* fileE = fopen("/var/log/syslog", "r"); // should check the result
+    char lineError[256];
+	while (fgets(lineError, sizeof(lineError), fileE)) {
+      if (strstr(lineError, "CRITICAL") != NULL) {
+		strncpy(errorM, lineError+55,64);
+		//fprintf(fp,"%s",asctime(timeinfo));
+		printf("[CRITICAL]-System critical error has been detected: %s \n",lineError);
+      }
+	}
 }
  
 int main(int argC,char* argV[])
 {
-	printf("%f%s \n", getCPUStat(),"%");
-	printf("%f%s \n", memStat(),"%");
+	//readErrors();
+	double Mem,CPU;
+	memStat(&Mem);
+	cpuStat(&CPU);
+	printf("%f%s \n", CPU,"%");
+	printf("%f%s \n", Mem,"%");
 	return 0;
 }
