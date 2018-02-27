@@ -13,7 +13,6 @@
  */
 #include<stdlib.h>
 #include<string.h>
-#include<unistd.h>
 #include<stdio.h>
 
 #define CPU_STAT_FILE_NAME "/proc/stat"
@@ -38,17 +37,17 @@ double getCPUStat(){
 	int i = 0;
 	double sum = 0, idle = 0;
 
-	FILE* fp = fopen(CPU_STAT_FILE_NAME,"r"); //open file
+	FILE* file = fopen(CPU_STAT_FILE_NAME,"r"); //open file
 
-	if(fp == NULL){ //if the file can not be open
-		printf("Error, no file open");
+	if(file == NULL){ //if the file can not be open
+		printf("can not open file");
 		return -1;
 	}
 	//file open
 	else{
 		i = 0;
-		fgets(str,100,fp);
-		fclose(fp);
+		fgets(str,100,file);
+		fclose(file);
 		token = strtok(str,d); //token by token
 
 		while(token!=NULL){
@@ -62,7 +61,6 @@ double getCPUStat(){
 				i++;
 			}
 		}
-		printf("%f\n", 100 - 100*(idle/sum));
 		return (1.0 - (idle)*1.0/(sum))*100;	
 	}
     
@@ -88,25 +86,19 @@ double memStat()
     	int i = 0, j = 0; //to know which parameter is readed
     	char* token;
     	// while there are lines to read
-    	while(fgets(line, sizeof(line), file) != NULL){
-    	 	
+    	while( i < 2){
+    	 	fgets(line, sizeof(line), file);
     	 	token = strtok(line,d);
-    	 	while(token!=NULL){              //while to separeta MemTotal:        5991156 kB
+    	 	while(token!=NULL && j < 4){              //while to separeta MemTotal:        5991156 kB
 				token = strtok(NULL,d);
 				if (j == 0){
 					memTotal = atof(token); //get the memory total value
 				}
 				if (j == 3){
-					memFree = atof(token);  //get the memory free value
-					break;
+					memFree = atof(token);  //get the memory free value					
 				}
 				j++;	
 			}
-
-    	 	if (i == 1){
-    	 		break;    	 		
-    	 	}
-
             i++;
     	} //END WHILE
 
@@ -118,7 +110,7 @@ double memStat()
     else{ //if the file couldnt be open
     	//syslog(LOG_ERR, "Can not open config file: %s, error: %s",
 		//	conf_file_name, strerror(errno));
-		printf("Error, no file open");
+		printf("Can not open file");
     	fclose(file);	
     	return -1;
     }
@@ -128,7 +120,7 @@ double memStat()
  
 int main(int argC,char* argV[])
 {
-	getCPUStat();
-	//memStat();
+	printf("%f%s \n", getCPUStat(),"%");
+	printf("%f%s \n", memStat(),"%");
 	return 0;
 }

@@ -42,44 +42,19 @@ int writeLog(char * pAlertUsage, char* pThreshold, int pType){
 	//file open
 	else{		
 		if (pType == CPU_ALERT){
-			char * CPU1 = "CPU usage is currently  ";
-			char* CPU2 =" which is over ";
-			char * CPU3 = (char *) malloc(1 + strlen(CPU1)+ strlen(pAlertUsage)+ strlen(CPU2) +strlen(pThreshold));
-			strcpy(CPU3, CPU1);
-			strcat(CPU3,pAlertUsage);
-			strcat(CPU3,CPU2);
-			strcat(CPU3,pThreshold);
-			fprintf(fp, "%s\n", CPU3);
+			fprintf(fp, "[CRITICAL] CPU usage is currently: %s which is over %s\n", pAlertUsage, pThreshold);
 			return 1;			
 		} else if (pType == MEM_ALERT) {
-			char * MEM1 = "Memory usage is currently: ";
-			char * MEM2 =" which is over: ";
-			char * MEM3 = (char *) malloc(1 + strlen(MEM1)+ strlen(pAlertUsage)+ strlen(MEM2) +strlen(pThreshold));
-			strcpy(MEM3, MEM1);
-			strcat(MEM3,pAlertUsage);
-			strcat(MEM3,MEM2);
-			strcat(MEM3,pThreshold);
-			fprintf(fp, "%s\n", MEM3);
+			fprintf(fp, "[CRITICAL] Memory usage is currently: %s which is over %s\n", pAlertUsage, pThreshold);
 			return 1;
 		} else if (pType == NET_ALERT) {
-			char * NET1 = "SYN flood connections detected. Currently there are ";
-			char * NET2 =" active SYN_RECV connections, which is over: ";
-			char * NET3 = (char *) malloc(1 + strlen(NET1)+ strlen(pAlertUsage)+ strlen(NET2) +strlen(pThreshold));
-			strcpy(NET3, NET1);
-			strcat(NET3,pAlertUsage);
-			strcat(NET3,NET2);
-			strcat(NET3,pThreshold);
-			fprintf(fp, "%s\n", NET3);
+			fprintf(fp, "[CRITICAL] SYN flood connections detected. Currently there are %s active SYN_RECV connections, which is over: %s\n", pAlertUsage, pThreshold);
 			return 1;
 		} else if (pType == SYS_ERROR_ALERT){
-			char * sys1 = "System critical error has been detected: ";
-			char * sys2 =  (char *) malloc(1 + strlen(sys1)+ strlen(pAlertUsage));
-			strcpy(sys2, sys1);
-			strcat(sys2,pAlertUsage);
-			fprintf(fp, "%s\n", sys2);
+			fprintf(fp, "[CRITICAL] System critical error has been detected: %s\n", pAlertUsage);
 			return 1;
 		} else {
-			printf("Type spicifier is not valid");
+			//printf("Type spicifier is not valid");
 			return -1;
 		}
 	}

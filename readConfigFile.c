@@ -19,86 +19,57 @@
  * @brief setting global variables
  */
 #define CONFIG_FILE_NAME "config.conf"
-#define MAXBUF 1024
-#define DELIM "="
-
-/**
- * @details struct definition... contains all the variables of the config file
- * 
- */
-struct trackermonConfig {
-	char CPUthreshold[MAXBUF];
-	char MEMthreshold[MAXBUF];
-	char SYNthreshold[MAXBUF];
-};
 
 /**
  * @brief method that read a config file
  * @details this method read a config file and save it values into a struct
  * 
  * @param pfilename name of the config file to read
- * @return a struct with config file info
  */
-struct trackermonConfig readConfig(char* pfilename){
+void readConfigFile(int *pCPU, int * pMEM, int * pSYNN, char * plogFilePath){
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
 
-	struct trackermonConfig configStruct; //struct tu retorn
-    FILE *file = fopen (pfilename, "r");   //open the file, read stat
+    fp = fopen(CONFIG_FILE_NAME, "r");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
 
-    //if the file exists or open
-    if (file != NULL){
+    char key[256], value[256];
+    int iVal;
 
-    	char line[MAXBUF]; //reading line for the config file
-    	int i = 0; //to know which parameter is readed
-
-    	// while there are lines to read
-    	while(fgets(line, sizeof(line), file) != NULL){
-    		char *cfline;
-    	 	cfline = strstr((char *)line,DELIM);
-    	 	cfline = cfline + strlen(DELIM);
-
-    	 	if (i == 6){
-                memcpy(configStruct.CPUthreshold,cfline,strlen(cfline));
-            } else if (i == 9){
-                memcpy(configStruct.MEMthreshold,cfline,strlen(cfline));                    
-            } else if (i == 12){
-                memcpy(configStruct.SYNthreshold,cfline,strlen(cfline));                    
+    while ((read = getline(&line, &len, fp)) != -1) {
+        if(line[0] == '#' || line[0] == '\n')
+            continue;
+        else{
+            sscanf(line, "%s = %s", key, value);
+            if(strcmp(key, "LOGFILE") == 0){       //Identify the LOGFILE path
+                strncpy(plogFilePath,value, 255);
+            } else if(strcmp(key, "CPUthreshold") == 0){  //Read the CPUthreshold
+                sscanf(value, "%d", &(*pCPU));
+            } else if(strcmp(key, "MEMthreshold") == 0){  //Read the Memthreshold
+                sscanf(value, "%d", &(*pMEM));
+            } else if(strcmp(key, "SYNthreshold") == 0){  //Read the SYNthreshold
+                sscanf(value, "%d", &(*pSYNN));
             }
-            i++;
-    	} //END WHILE
-
-    	//closing the file
-    	fclose(file);	
-
-    	return configStruct;
-    }// IF END
-
-    else{ //if the file couldnt be open
-    	//syslog(LOG_ERR, "Can not open config file: %s, error: %s",
-		//	conf_file_name, strerror(errno));
-		printf("Error, no file open");
-    	fclose(file);	
-    	return configStruct;
+        }
     }
+
+    fclose(fp);
 }
 
 /**
  * @brief Example of how to run it
  */
 int main(int argc, char **argv)
-{
-        struct trackermonConfig configstruct;
-       
-        configstruct = readConfig(CONFIG_FILE_NAME);
-       
-        // Struct members 
-        printf("%s",configstruct.CPUthreshold);
-        printf("%s",configstruct.MEMthreshold);
-        //printf("%s",configstruct.SYNthreshold);
-       
-        // Cast port as int 
-        int x;
-        x = atoi(configstruct.SYNthreshold);
-        printf("%d\n",x);
-               
-        return 0;
+{    
+    int CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
+    char * logFilePath;
+    readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath); 
+    printf("%s\n", logFilePath);      
+    printf("%d\n", CPU_TRESHOLD);
+    printf("%d\n", MEM_TRESHOLD);
+    printf("%d\n", SYNNCONN_TRESHOLD);           
+    return 0;
 }
