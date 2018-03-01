@@ -1,0 +1,13 @@
+[Unit]
+Description= Trackermon Daemon Service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/etc/trackermon
+ExecStart=/home/david/Documents/Operativos/Proyectos/TareaCorta1/TrackerMon-Daemon/trackermon echo "Starting Trackermon Service..."
+ExecStop= /home/david/Documents/Operativos/Proyectos/TareaCorta1/TrackerMon-Dae$ echo "Stopping Trackermon Service..."
+//RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
