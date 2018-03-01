@@ -18,7 +18,7 @@
 /**
  * @brief setting global variables
  */
-#define CONFIG_FILE_NAME "config.conf"
+#define CONFIG_FILE_NAME "/etc/trackermon/config.conf"
 
 /**
  * @brief method that read a config file
@@ -26,7 +26,7 @@
  * 
  * @param pfilename name of the config file to read
  */
-void readConfigFile(int *pCPU, int * pMEM, int * pSYNN, char * plogFilePath){
+void readConfigFile(float *pCPU, float * pMEM, float * pSYNN, char * plogFilePath){
     FILE * fp;    
 
     fp = fopen(CONFIG_FILE_NAME, "r");
@@ -49,11 +49,11 @@ void readConfigFile(int *pCPU, int * pMEM, int * pSYNN, char * plogFilePath){
                 if(strcmp(key, "LOGFILE") == 0){       //Identify the LOGFILE path
                     strncpy(plogFilePath,value, 255);
                 } else if(strcmp(key, "CPUthreshold") == 0){  //Read the CPUthreshold
-                    sscanf(value, "%d", &(*pCPU));
+                    sscanf(value, "%f", &(*pCPU));
                 } else if(strcmp(key, "MEMthreshold") == 0){  //Read the Memthreshold
-                    sscanf(value, "%d", &(*pMEM));
+                    sscanf(value, "%f", &(*pMEM));
                 } else if(strcmp(key, "SYNthreshold") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%d", &(*pSYNN));
+                    sscanf(value, "%f", &(*pSYNN));
                 }
             }
         }
@@ -65,14 +65,15 @@ void readConfigFile(int *pCPU, int * pMEM, int * pSYNN, char * plogFilePath){
 /**
  * @brief Example of how to run it
  */
+/**
 int main(int argc, char **argv)
 {    
-    int CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
+    float CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
     char * logFilePath;
     readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath); 
     printf("%s\n", logFilePath);      
-    printf("%d\n", CPU_TRESHOLD);
-    printf("%d\n", MEM_TRESHOLD);
-    printf("%d\n", SYNNCONN_TRESHOLD);           
+    printf("%f\n", CPU_TRESHOLD);
+    printf("%f\n", MEM_TRESHOLD);
+    printf("%f\n", SYNNCONN_TRESHOLD);           
     return 0;
-}
+}*/

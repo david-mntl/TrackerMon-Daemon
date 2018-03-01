@@ -15,6 +15,8 @@
 #include<string.h>
 #include<stdio.h>
 
+#include "../FileManagement/writeLogFile.c"
+
 #define CPU_STAT_FILE_NAME "/proc/stat"
 #define MEM_STAT_FILE_NAME "/proc/meminfo"
 #define MAXBUF 1024
@@ -30,7 +32,7 @@
  *          The CPU usage = ( 1 - (4266549 / suma(296948, 1960, 101245, 4266549, 59385, 0, 848, 0, 0, 0)) )*100
  * @return The cpu usage
  */
-void cpuStat(double * pCPU){	
+void cpuStat(float pCPU_TRESHOLD){	
 
 	FILE* file = fopen(CPU_STAT_FILE_NAME,"r"); //open file
 
@@ -44,7 +46,7 @@ void cpuStat(double * pCPU){
 		const char d[2] = " ";
 		char* token;
 		int i = 0;
-		double sum = 0, idle = 0;
+		float sum = 0, idle = 0;
 		fgets(str,100,file);
 		fclose(file);
 		token = strtok(str,d); //token by token
@@ -60,7 +62,10 @@ void cpuStat(double * pCPU){
 				i++;
 			}
 		}
-		*pCPU = (1.0 - (idle)*1.0/(sum))*100;	
+		float CPU = ((1.0 - (idle)*1.0/(sum))*100);
+		if(CPU > pCPU_TRESHOLD){
+    		writeLog(CPU, pCPU_TRESHOLD,"",0);
+		}	
 	}
     
 }
@@ -73,7 +78,7 @@ void cpuStat(double * pCPU){
  *          The Memory usage = 100*(MemTotal - MemFree)/MemTotal
  * @return Return the memory usage
  */
-void memStat(double * pMEM)
+void memStat(float pMEM_TRESHOLD)
 {
 	FILE *file = fopen (MEM_STAT_FILE_NAME, "r");   //open the file, read stat	
 	if(file == NULL){
@@ -85,7 +90,7 @@ void memStat(double * pMEM)
     	char line[MAXBUF]; //reading line for the config file
     	int i = 0, j = 0; //to know which parameter is readed
     	char* token;
-    	double memTotal, memFree;
+    	float memTotal, memFree;
 		const char d[2] = " ";	
     	// while there are lines to read
     	while( i < 2){
@@ -106,32 +111,38 @@ void memStat(double * pMEM)
 
     	//closing the file
     	fclose(file);	
-    	*pMEM = 100*(memTotal- memFree)/memTotal;;
+    	float MEM = (100*(memTotal- memFree)/memTotal); 
+    	if(MEM > pMEM_TRESHOLD){
+    		writeLog(MEM, pMEM_TRESHOLD, "",1);
+    	}
     }// ILSE END
 }
 
-
+/**
+ * @brief [brief description]
+ * @details [long description]
+ */
+int i = 0;
 void readErrors(){
 	char *errorM = (char*) malloc(256);
-	//char const* const fileError = "/var/log/messages.log"; //should check that argc > 1
     FILE* fileE = fopen("/var/log/syslog", "r"); // should check the result
     char lineError[256];
-	while (fgets(lineError, sizeof(lineError), fileE)) {
-      if (strstr(lineError, "CRITICAL") != NULL) {
-		strncpy(errorM, lineError+55,64);
-		//fprintf(fp,"%s",asctime(timeinfo));
-		printf("[CRITICAL]-System critical error has been detected: %s \n",lineError);
-      }
+    if (i == 0){
+		while (fgets(lineError, sizeof(lineError), fileE)) {
+			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Logs")){
+				strncpy(errorM, lineError+55,64);
+				writeLog(0.0,0.0,lineError, 3);
+			}
+		}
+		fclose(fileE);	
+		i = 1;
 	}
-}
- 
-int main(int argC,char* argV[])
-{
-	//readErrors();
-	double Mem,CPU;
-	memStat(&Mem);
-	cpuStat(&CPU);
-	printf("%f%s \n", CPU,"%");
-	printf("%f%s \n", Mem,"%");
-	return 0;
+	else{
+		while (fgets(lineError, sizeof(lineError), fileE)) {
+			if (strstr(lineError, "CRITICAL") != NULL)
+				strncpy(errorM, lineError+55,64);
+		}
+		fclose(fileE);	
+		writeLog(0.0,0.0,lineError, 3);
+	}
 }
