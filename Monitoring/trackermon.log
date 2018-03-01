@@ -1,2 +1,0 @@
-[CRITICAL] System critical error has been detected: Feb 28 17:49:19 jairom26 org.gnome.Terminal[1579]: (gnome-terminal-server:3122): Gtk-CRITICAL **: gtk_device_grab_add: assertion 'GDK_IS_DEVICE (device)' failed
-

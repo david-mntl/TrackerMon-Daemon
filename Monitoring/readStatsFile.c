@@ -32,7 +32,7 @@
  *          The CPU usage = ( 1 - (4266549 / suma(296948, 1960, 101245, 4266549, 59385, 0, 848, 0, 0, 0)) )*100
  * @return The cpu usage
  */
-void cpuStat(float * pCPU){	
+void cpuStat(float pCPU_TRESHOLD){	
 
 	FILE* file = fopen(CPU_STAT_FILE_NAME,"r"); //open file
 
@@ -62,7 +62,10 @@ void cpuStat(float * pCPU){
 				i++;
 			}
 		}
-		*pCPU = (1.0 - (idle)*1.0/(sum))*100;	
+		float CPU = ((1.0 - (idle)*1.0/(sum))*100);
+		if(CPU > pCPU_TRESHOLD){
+    		writeLog(CPU, pCPU_TRESHOLD,"",0);
+		}	
 	}
     
 }
@@ -75,7 +78,7 @@ void cpuStat(float * pCPU){
  *          The Memory usage = 100*(MemTotal - MemFree)/MemTotal
  * @return Return the memory usage
  */
-void memStat(float * pMEM)
+void memStat(float pMEM_TRESHOLD)
 {
 	FILE *file = fopen (MEM_STAT_FILE_NAME, "r");   //open the file, read stat	
 	if(file == NULL){
@@ -108,35 +111,38 @@ void memStat(float * pMEM)
 
     	//closing the file
     	fclose(file);	
-    	*pMEM = 100*(memTotal- memFree)/memTotal;;
+    	float MEM = (100*(memTotal- memFree)/memTotal); 
+    	if(MEM > pMEM_TRESHOLD){
+    		writeLog(MEM, pMEM_TRESHOLD, "",1);
+    	}
     }// ILSE END
 }
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ */
+int i = 0;
 void readErrors(){
 	char *errorM = (char*) malloc(256);
-	//char const* const fileError = "/var/log/messages.log"; //should check that argc > 1
     FILE* fileE = fopen("/var/log/syslog", "r"); // should check the result
     char lineError[256];
-	while (fgets(lineError, sizeof(lineError), fileE)) {
-      if (strstr(lineError, "CRITICAL") != NULL)
-		strncpy(errorM, lineError+55,64);
-	}	
-	printf("%s\n", lineError);	
-	writeLog(lineError, "", 3);
-}
-
- 
-/**
- * @brief Example of how to run it
- */
-
-int main(int argC,char* argV[])
-{
-	readErrors();
-	//float Mem,CPU;
-	//memStat(&Mem);
-	//cpuStat(&CPU);
-	//printf("%f%s \n", CPU,"%");
-	//printf("%f%s \n", Mem,"%");
-	return 0;
+    if (i == 0){
+		while (fgets(lineError, sizeof(lineError), fileE)) {
+			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Logs")){
+				strncpy(errorM, lineError+55,64);
+				writeLog(0.0,0.0,lineError, 3);
+			}
+		}
+		fclose(fileE);	
+		i = 1;
+	}
+	else{
+		while (fgets(lineError, sizeof(lineError), fileE)) {
+			if (strstr(lineError, "CRITICAL") != NULL)
+				strncpy(errorM, lineError+55,64);
+		}
+		fclose(fileE);	
+		writeLog(0.0,0.0,lineError, 3);
+	}
 }

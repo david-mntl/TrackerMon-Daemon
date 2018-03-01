@@ -34,9 +34,9 @@
  * @param indicate the type of the alert
  * @return return 1 if the message has been write, if not return -1
  */
-void writeLog(char * pAlertUsage, char* pThreshold, int pType){
+void writeLog(float pValue, float pThreshold, char* pAlertUsage,int pType){
 
-	FILE* fp = fopen(LOG_FILE_NAME,"ab+"); //open file
+	FILE* fp = fopen(LOG_FILE_NAME,"a+"); //open file
 
 	if(fp == NULL){ //if the file can not be open
 		fclose(fp); 
@@ -53,20 +53,20 @@ void writeLog(char * pAlertUsage, char* pThreshold, int pType){
 		}
 		switch(pType){
 			case(CPU_ALERT):
-				fprintf(fp, "[CRITICAL] CPU usage is currently: %s which is over %s\n", pAlertUsage, pThreshold);	
-				fflush(fp);		
+				fprintf(fp, "[CRITICAL] CPU usage is currently: %f which is over %f\n", pValue, pThreshold);	
+				//fflush(fp);		
 				break;
 			case(MEM_ALERT):
-				fprintf(fp, "[CRITICAL] Memory usage is currently: %s which is over %s\n", pAlertUsage, pThreshold);
-				fflush(fp);
+				fprintf(fp, "[CRITICAL] Memory usage is currently: %f which is over %f\n", pValue, pThreshold);
+				//fflush(fp);
 				break;
 			case(NET_ALERT):
-				fprintf(fp, "[CRITICAL] SYN flood connections detected. Currently there are %s active SYN_RECV connections, which is over: %s\n", pAlertUsage, pThreshold);
-				fflush(fp);
+				fprintf(fp, "[CRITICAL] SYN flood connections detected. Currently there are %f active SYN_RECV connections, which is over: %f\n", pValue, pThreshold);
+				//fflush(fp);
 				break;
 			case(SYS_ERROR_ALERT):
 				fprintf(fp, "[CRITICAL] System critical error has been detected: %s\n", pAlertUsage);
-				fflush(fp);
+				//fflush(fp);
 				break;
 		}	
 		fclose(fp);
@@ -76,8 +76,9 @@ void writeLog(char * pAlertUsage, char* pThreshold, int pType){
 /**
  * @brief Example of how to run it
  */
+/**
 int main(int argc, char const *argv[])
 {
 	writeLog("6,5", "6", 0);
 	return 0;
-}
+}*/
