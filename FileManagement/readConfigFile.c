@@ -61,19 +61,3 @@ void readConfigFile(float *pCPU, float * pMEM, float * pSYNN, char * plogFilePat
     }
     
 }
-
-/**
- * @brief Example of how to run it
- */
-/**
-int main(int argc, char **argv)
-{    
-    float CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
-    char * logFilePath;
-    readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath); 
-    printf("%s\n", logFilePath);      
-    printf("%f\n", CPU_TRESHOLD);
-    printf("%f\n", MEM_TRESHOLD);
-    printf("%f\n", SYNNCONN_TRESHOLD);           
-    return 0;
-}*/

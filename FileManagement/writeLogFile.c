@@ -72,13 +72,3 @@ void writeLog(float pValue, float pThreshold, char* pAlertUsage,int pType){
 		fclose(fp);
 	}
 }
-
-/**
- * @brief Example of how to run it
- */
-/**
-int main(int argc, char const *argv[])
-{
-	writeLog("6,5", "6", 0);
-	return 0;
-}*/

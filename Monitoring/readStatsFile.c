@@ -119,13 +119,18 @@ void memStat(float pMEM_TRESHOLD)
 }
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief Method that read all the critical errors, and the errors force by the user
+ * @details The first time that is executed saved all the errors of the syslog file 
+ *          the others time it will read only the last error
  */
 int i = 0;
 void readErrors(){
 	char *errorM = (char*) malloc(256);
     FILE* fileE = fopen("/var/log/syslog", "r"); // should check the result
+    if(fileE == NULL){
+		fclose(fileE); 
+        exit(EXIT_FAILURE);
+	}
     char lineError[256];
     if (i == 0){
 		while (fgets(lineError, sizeof(lineError), fileE)) {
@@ -139,10 +144,33 @@ void readErrors(){
 	}
 	else{
 		while (fgets(lineError, sizeof(lineError), fileE)) {
-			if (strstr(lineError, "CRITICAL") != NULL)
+			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Logs"))
 				strncpy(errorM, lineError+55,64);
 		}
 		fclose(fileE);	
 		writeLog(0.0,0.0,lineError, 3);
 	}
+}
+
+// return the number of SYN_RECV
+/**
+ * @brief Method that read synn connections
+ */
+void getSynStat(){
+	
+   	FILE *file = popen ("netstat -tuna | grep -c SYN_RECV", "r");//load  the command output with syn information
+
+    if(file == NULL){
+		fclose(file); 
+        exit(EXIT_FAILURE);
+	}
+    else{
+    	char line[100];// will load a line of tmd
+    	fgets(line, sizeof(line), file);// load a line
+
+    	fclose(file);// close file after read
+    	int synRecv = atof(line);// cast line to int and assing to sysRecv
+    	printf("%d\n",synRecv);
+    		
+  	} 
 }
