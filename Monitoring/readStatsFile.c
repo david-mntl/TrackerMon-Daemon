@@ -134,7 +134,7 @@ void readErrors(){
     char lineError[256];
     if (i == 0){
 		while (fgets(lineError, sizeof(lineError), fileE)) {
-			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Logs")){
+			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Error")){
 				strncpy(errorM, lineError+55,64);
 				writeLog(0.0,0.0,lineError, 3);
 			}
@@ -144,7 +144,7 @@ void readErrors(){
 	}
 	else{
 		while (fgets(lineError, sizeof(lineError), fileE)) {
-			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Logs"))
+			if (strstr(lineError, "CRITICAL") != NULL || strstr(lineError, "Error"))
 				strncpy(errorM, lineError+55,64);
 		}
 		fclose(fileE);	
@@ -170,7 +170,7 @@ void getSynStat(){
 
     	fclose(file);// close file after read
     	int synRecv = atof(line);// cast line to int and assing to sysRecv
-    	printf("%d\n",synRecv);
+    	//printf("%d\n",synRecv);
     		
   	} 
 }

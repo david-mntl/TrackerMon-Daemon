@@ -5,7 +5,7 @@
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
  * @date 27-02-2018
  * 
- * compilation command: gcc trackermon.c -o exec
+ * compilation command: gcc trackermon.c -o trackermon
  * Execution: ./exec
  */
 
@@ -36,8 +36,9 @@ int main(int argc, char const *argv[])
 		getSynStat();
 		//forceError(5);
 		readErrors();
+		readErrors();
 		i++;
-		sleep(2);
+		sleep(4);
     }    
 	
 	

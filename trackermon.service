@@ -1,0 +1,11 @@
+[Unit]
+Description=trackermon service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/sbin/trackermon start
+ExecReload=/usr/sbin/trackermon reload
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target

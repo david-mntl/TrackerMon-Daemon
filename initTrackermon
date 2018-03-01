@@ -10,34 +10,32 @@ echo ""
 
 sudo touch /var/log/trackermon.log
 sudo chown -R $USER:$USER /var/log/trackermon.log
-chmod +rwx /var/log/file
+chmod +rwx /var/log/trackermon.log
 
-echo "Creating log file"
+echo "Creating trackermon.log file"
 
 sudo mkdir /etc/trackermon
 echo "Creating directory at /etc/trackermon"
 
 sudo cp config.conf /etc/trackermon
 
-echo "Compiling Code"
+echo "Compiling Trackermon Code"
 gcc trackermon.c -o trackermon
 
-sudo cp trackermon /etc/trackermon
-
-//sudo cp h_trackermon.sh /etc/trackermon
+sudo cp trackermon /usr/sbin/
 
 echo "Setup complete"
 
 echo "Initizialing Service"
 
-sudo cp trackermon.service /etc/systemd/system
-
-sudo systemctl daemon-reload
+sudo cp trackermon.service /etc/systemd/system/
 
 sudo systemctl enable trackermon.service
 
+sudo systemctl daemon-reload
+
 sudo systemctl start trackermon.service
 
-echo "Creating trackermon systemd service...done"
+echo "Creating and starting trackermon systemd service...done"
 echo ""
 echo "Installation finalized"
