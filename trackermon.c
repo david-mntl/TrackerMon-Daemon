@@ -25,7 +25,7 @@ void forceError(int index){
 }
 
 int main(int argc, char const *argv[])
-{/**
+{
 	float CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
     char * logFilePath;
     readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath);
@@ -33,14 +33,13 @@ int main(int argc, char const *argv[])
     while(1){
     	cpuStat(CPU_TRESHOLD);
 		memStat(MEM_TRESHOLD);	
+		getSynStat();
+		//forceError(5);
 		readErrors();
-		printf("%d\n", i);
 		i++;
 		sleep(2);
     }    
-    */
-	forceError(5);
-	readErrors();
+	
 	
 	return 0;
 }
