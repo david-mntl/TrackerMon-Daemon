@@ -6,7 +6,7 @@
  * @date 27-02-2018
  * 
  * compilation command: gcc trackermon.c -o trackermon
- * Execution: ./exec
+ * Execution: ./trackermon
  */
 
 #include <stdio.h> 
