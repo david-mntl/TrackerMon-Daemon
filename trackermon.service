@@ -1,9 +1,14 @@
 [Unit]
+<<<<<<< HEAD
 Description= Trackermon Daemon Service
+=======
+Description=trackermon service
+>>>>>>> 400ade1ae2ad69a9fa1f7bfe34b0d0c3fd38f3bd
 
 [Service]
 Type=simple
 User=root
+<<<<<<< HEAD
 WorkingDirectory=/etc/trackermon
 ExecStart=/home/david/Documents/Operativos/Proyectos/TareaCorta1/TrackerMon-Daemon/trackermon echo "Starting Trackermon Service..."
 ExecStop= /home/david/Documents/Operativos/Proyectos/TareaCorta1/TrackerMon-Dae$ echo "Stopping Trackermon Service..."
@@ -11,3 +16,10 @@ ExecStop= /home/david/Documents/Operativos/Proyectos/TareaCorta1/TrackerMon-Dae$
 
 [Install]
 WantedBy=multi-user.target
+=======
+ExecStart=/usr/sbin/trackermon start
+ExecReload=/usr/sbin/trackermon reload
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+>>>>>>> 400ade1ae2ad69a9fa1f7bfe34b0d0c3fd38f3bd
