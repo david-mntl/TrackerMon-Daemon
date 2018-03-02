@@ -3,6 +3,7 @@
  * @details Simple program to read file into a config struct
  * 
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
+ * @author David Monestel Aguilar <p.david06.p@gmail.com>
  * @date 25-02-2018
  * 
  * reference: https://www.pacificsimplicity.ca/blog/simple-read-configuration-file-struct-example = link that helps to resolve the problem

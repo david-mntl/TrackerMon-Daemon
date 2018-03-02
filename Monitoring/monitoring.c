@@ -3,6 +3,7 @@
  * @details Simple program to read /proc/stat file
  * 
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
+ * @author David Monestel Aguilar <p.david06.p@gmail.com>
  * @date 25-02-2018
  * 
  * 
@@ -30,7 +31,7 @@
  *          Read the first line of the /proc/stat file
  *          The /proc/stat output: cpu  296948 1960 101245 4266549 59385 0 848 0 0 0
  *          The CPU usage = ( 1 - (4266549 / suma(296948, 1960, 101245, 4266549, 59385, 0, 848, 0, 0, 0)) )*100
- * @return The cpu usage
+ *          Write on the trackermon.log if it is neccesary
  */
 void cpuStat(float pCPU_TRESHOLD){	
 
@@ -76,7 +77,7 @@ void cpuStat(float pCPU_TRESHOLD){
  *          The cat /proc/meminfo output: MemTotal:        5991156 kB
 										  MemFree:         1870996 kB
  *          The Memory usage = 100*(MemTotal - MemFree)/MemTotal
- * @return Return the memory usage
+ *          Write on the trackermon.log if it is neccesary
  */
 void memStat(float pMEM_TRESHOLD)
 {
@@ -122,9 +123,10 @@ void memStat(float pMEM_TRESHOLD)
  * @brief Method that read all the critical errors, and the errors force by the user
  * @details The first time that is executed saved all the errors of the syslog file 
  *          the others time it will read only the last error
+ *          Write on the trackermon.log the critical errors
  */
 int i = 0;
-void readErrors(){
+void readError(){
 	char *errorM = (char*) malloc(256);
     FILE* fileE = fopen("/var/log/syslog", "r"); // should check the result
     if(fileE == NULL){
@@ -155,8 +157,9 @@ void readErrors(){
 // return the number of SYN_RECV
 /**
  * @brief Method that read synn connections
+ *          Write on the trackermon.log if it is neccesary
  */
-void getSynStat(){
+void synnStat(float pSYNN_TRESHOLD){
 	
    	FILE *file = popen ("netstat -tuna | grep -c SYN_RECV", "r");//load  the command output with syn information
 
@@ -170,7 +173,7 @@ void getSynStat(){
 
     	fclose(file);// close file after read
     	int synRecv = atof(line);// cast line to int and assing to sysRecv
-    	//printf("%d\n",synRecv);
-    		
+    	if(synRecv > pSYNN_TRESHOLD)
+    		writeLog(synRecv, pSYNN_TRESHOLD,"",2);    		
   	} 
 }

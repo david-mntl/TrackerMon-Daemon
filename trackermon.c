@@ -3,6 +3,7 @@
  * @details Simple program of the deamon
  * 
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
+ * @author David Monestel Aguilar <p.david06.p@gmail.com>
  * @date 27-02-2018
  * 
  * compilation command: gcc trackermon.c -o trackermon
@@ -16,29 +17,20 @@
 #include <syslog.h>
 
 #include "./FileManagement/readConfigFile.c"
-#include "./Monitoring/readStatsFile.c"
-
-void forceError(int index){
-	openlog("Logs", 0, LOG_USER);
-	syslog(LOG_CRIT, "Error Force: %d", index);
-	closelog();
-}
+#include "./Monitoring/monitoring.c"
 
 int main(int argc, char const *argv[])
 {
 	float CPU_TRESHOLD = 0, MEM_TRESHOLD = 0, SYNNCONN_TRESHOLD = 0;
     char * logFilePath;
-    readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath);
+    readConfigFile(&CPU_TRESHOLD, &MEM_TRESHOLD, &SYNNCONN_TRESHOLD, logFilePath); //read config.conf file
     int i = 0;
     while(1){
     	cpuStat(CPU_TRESHOLD);
 		memStat(MEM_TRESHOLD);	
-		getSynStat();
-		//forceError(5);
-		readErrors();
-		readErrors();
-		i++;
-		sleep(4);
+		synnStat(SYNNCONN_TRESHOLD);
+		readError();				
+		sleep(2);
     }    
 	
 	

@@ -3,6 +3,7 @@
  * @details Simple program to write in log file
  * 
  * @author Jairo Mendez Martinez <jairomendezmartinez@gmail.com>
+ * @author David Monestel Aguilar <p.david06.p@gmail.com>
  * @date 26-02-2018
  * 
  * 
