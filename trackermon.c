@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 		memStat(MEM_TRESHOLD);	
 		synnStat(SYNNCONN_TRESHOLD);
 		readError();				
-		sleep(2);
+		sleep(3);
     }    
 	
 	

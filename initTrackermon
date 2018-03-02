@@ -8,6 +8,8 @@ echo "-------------------------------"
 
 echo ""
 
+sudo rm -f /var/log/trackermon.log
+
 sudo touch /var/log/trackermon.log
 sudo chown -R $USER:$USER /var/log/trackermon.log
 chmod +rwx /var/log/trackermon.log

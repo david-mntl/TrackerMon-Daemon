@@ -2,7 +2,7 @@
 Description=trackermon service
 
 [Service]
-Type=Forking
+Type=Simple
 User=root
 ExecStart=/usr/sbin/trackermon start
 ExecReload=/usr/sbin/trackermon reload
